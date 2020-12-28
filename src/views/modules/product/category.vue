@@ -1,6 +1,7 @@
 <template>
-  <el-tree :data="menus" :props="defaultProps" :expand-on-click-node="false" show-checkbox node-key="catId"
-           default-expanded-keys="expandedKey">
+  <div>
+    <el-tree :data="menus" :props="defaultProps" :expand-on-click-node="false" show-checkbox node-key="catId"
+             default-expanded-keys="expandedKey">
     <span class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.label }}</span>
         <span>
@@ -20,7 +21,19 @@
           </el-button>
         </span>
       </span>
-  </el-tree>
+    </el-tree>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -28,6 +41,7 @@ export default {
   name: 'category',
   data () {
     return {
+      dialogVisible: false,
       expandedKey: [],
       menus: [],
       defaultProps: {
@@ -47,6 +61,7 @@ export default {
       })
     },
     append (data) {
+      this.dialogVisible = true
       console.log('append', data)
     },
     remove (node, data) {
