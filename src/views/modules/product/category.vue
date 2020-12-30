@@ -8,6 +8,9 @@
           <el-button v-if="node.level <=2" type="text" size="mini" @click="() => append(data)">
             Append
           </el-button>
+          <el-button  type="text" size="mini" @click="edit(data)">
+            edit
+          </el-button>
           <el-button v-if="node.childNodes.length == 0" type="text" size="mini" @click="() => remove(node, data)">
             Delete
           </el-button>
@@ -22,7 +25,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="addCategory">确 定</el-button>
+    <el-button type="primary" @click="submitData">确 定</el-button>
   </span>
     </el-dialog>
   </div>
@@ -33,7 +36,8 @@ export default {
   name: 'category',
   data () {
     return {
-      category: {name: '', parentCid: 0, catLevel: 0, showStatus: 1, sort: 0},
+      dialogType: '',
+      category: {name: '', parentCid: 0, catLevel: 0, showStatus: 1, sort: 0, catId: null},
       dialogVisible: false,
       expandedKey: [],
       menus: [],
@@ -55,9 +59,28 @@ export default {
     },
     append (data) {
       console.log('append', data)
+      this.dialogType = 'add'
       this.dialogVisible = true
       this.category.parentCid = data.catId
       this.category.catLevel = data.catLevel * 1 + 1
+    },
+    edit (data) {
+      console.log('要修改的数据', data)
+      this.dialogType = 'edit'
+      this.dialogVisible = true
+      this.category.name = data.name
+      this.category.catId = data.catId
+    },
+    submitData () {
+      if (this.dialogType === 'add') {
+        this.addCategory()
+      }
+      if (this.dialogType === 'edit') {
+        this.editCategory()
+      }
+    },
+    editCategory () {
+
     },
     // 添加三级分类
     addCategory () {
