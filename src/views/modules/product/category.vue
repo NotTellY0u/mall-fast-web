@@ -62,6 +62,20 @@ export default {
     // 添加三级分类
     addCategory () {
       console.log('提交的三级分类数据', this.category)
+      this.$http({
+        url: this.$http.adornUrl('/product/category/save'),
+        method: 'post',
+        data: this.$http.adornData(this.category, false)
+      }).then(({data}) => {
+        this.$message({
+          message: '菜单保存成功',
+          type: 'success'
+        })
+        // 关闭对话框
+        this.dialogVisible = false
+        this.getMenus()
+        this.expandedKey = [this.category.parentCid]
+      })
     },
 
     remove (node, data) {
