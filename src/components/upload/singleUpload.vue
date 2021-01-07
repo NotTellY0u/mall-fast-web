@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-upload
-      action="http://mall-fire.oss-cn-shenzhen.aliyuncs.com"
+      action="http://mall-hello891.oss-cn-shanghai.aliyuncs.com"
       :data="dataObj"
       list-type="picture"
       :multiple="false"
@@ -21,99 +21,104 @@
   </div>
 </template>
 <script>
-import { policy } from "./policy";
-import { getUUID } from "@/utils";
+import { policy } from './policy'
+import { getUUID } from '@/utils'
 
 export default {
-  name: "singleUpload",
+  name: 'singleUpload',
   props: {
     value: String
   },
   computed: {
-    imageUrl() {
-      return this.value;
+    imageUrl () {
+      return this.value
     },
-    imageName() {
-      if (this.value != null && this.value !== "") {
-        return this.value.substr(this.value.lastIndexOf("/") + 1);
+    imageName () {
+      if (this.value != null && this.value !== '') {
+        return this.value.substr(this.value.lastIndexOf('/') + 1)
       } else {
-        return null;
+        return null
       }
     },
-    fileList() {
+    fileList () {
       return [
         {
           name: this.imageName,
           url: this.imageUrl
         }
-      ];
+      ]
     },
     showFileList: {
-      get: function() {
+      get: function () {
         return (
-          this.value !== null && this.value !== "" && this.value !== undefined
-        );
+          this.value !== null && this.value !== '' && this.value !== undefined
+        )
       },
-      set: function(newValue) {}
+      set: function (newValue) {}
     }
   },
-  data() {
+  data () {
     return {
       dataObj: {
-        policy: "",
-        signature: "",
-        key: "",
-        ossaccessKeyId: "",
-        dir: "",
-        host: ""
+        policy: '',
+        signature: '',
+        key: '',
+        ossaccessKeyId: '',
+        dir: '',
+        host: ''
         // callback:'',
       },
       dialogVisible: false
-    };
+    }
   },
   methods: {
-    emitInput(val) {
-      this.$emit("input", val);
+    emitInput (val) {
+      this.$emit('input', val)
     },
-    handleRemove(file, fileList) {
-      this.emitInput("");
+    handleRemove (file, fileList) {
+      this.emitInput('')
     },
-    handlePreview(file) {
-      this.dialogVisible = true;
+    handlePreview (file) {
+      this.dialogVisible = true
     },
-    beforeUpload(file) {
-      let _self = this;
+    beforeUpload (file) {
+      let _self = this
       return new Promise((resolve, reject) => {
         policy()
           .then(response => {
-            _self.dataObj.policy = response.data.policy;
-            _self.dataObj.signature = response.data.signature;
-            _self.dataObj.ossaccessKeyId = response.data.accessid;
-            _self.dataObj.key = response.data.dir + getUUID() + "_${filename}";
-            _self.dataObj.dir = response.data.dir;
-            _self.dataObj.host = response.data.host;
+            console.log('响应的数据', response)
+            _self.dataObj.policy = response.data.policy
+            _self.dataObj.signature = response.data.signature
+            _self.dataObj.ossaccessKeyId = response.data.accessid
+            // eslint-disable-next-line no-template-curly-in-string
+            _self.dataObj.key = response.data.dir + getUUID() + '_${filename}'
+            _self.dataObj.dir = response.data.dir
+            _self.dataObj.host = response.data.host
             // console.log("响应的数据", _self.dataObj);
-            resolve(true);
+            resolve(true)
           })
+          // eslint-disable-next-line handle-callback-err
           .catch(err => {
-            reject(false);
-          });
-      });
+            // eslint-disable-next-line prefer-promise-reject-errors
+            reject(false)
+          })
+      })
     },
-    handleUploadSuccess(res, file) {
-      this.showFileList = true;
-      this.fileList.pop();
+    handleUploadSuccess (res, file) {
+      this.showFileList = true
+      this.fileList.pop()
       this.fileList.push({
         name: file.name,
         url:
           this.dataObj.host +
-          "/" +
-          this.dataObj.key.replace("${filename}", file.name)
-      });
-      this.emitInput(this.fileList[0].url);
+          '/' +
+          // eslint-disable-next-line no-template-curly-in-string
+          this.dataObj.key.replace('${filename}', file.name)
+      })
+      this.emitInput(this.fileList[0].url)
     }
   }
-};
+}
 </script>
 <style>
 </style>
