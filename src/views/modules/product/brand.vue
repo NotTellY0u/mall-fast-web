@@ -151,7 +151,7 @@ export default {
       // 发送请求修改状态
       let {brandId, showStatus} = data
       this.$http({
-        url: this.$http.adornUrl('/product/brand/update'),
+        url: this.$http.adornUrl('/product/brand/update/status'),
         method: 'post',
         data: this.$http.adornData({brandId: brandId, showStatus: showStatus ? 1 : 0}, false)
       }).then(({data}) => {
