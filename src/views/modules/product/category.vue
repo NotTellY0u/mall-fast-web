@@ -75,7 +75,7 @@ export default {
   methods: {
     getMenus () {
       this.$http({
-        url: this.$http.adornUrl('/product/category/list/tree'),
+        url: this.$http.adornUrl('/product/category.vue/list/tree'),
         method: 'get'
       }).then(({data}) => {
         console.log('成功获取到菜单数据', data.data)
@@ -95,7 +95,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$http({
-          url: this.$http.adornUrl('/product/category/delete'),
+          url: this.$http.adornUrl('/product/category.vue/delete'),
           method: 'post',
           data: this.$http.adornData(catIds, false)
         }).then(({data}) => {
@@ -110,7 +110,7 @@ export default {
     },
     batchSave () {
       this.$http({
-        url: this.$http.adornUrl('/product/category/update/sort'),
+        url: this.$http.adornUrl('/product/category.vue/update/sort'),
         method: 'post',
         data: this.$http.adornData(this.updateNodes, false)
       }).then(({data}) => {
@@ -240,7 +240,7 @@ export default {
     editCategory () {
       let {catId, name, icon, productUnit} = this.category
       this.$http({
-        url: this.$http.adornUrl('/product/category/update'),
+        url: this.$http.adornUrl('/product/category.vue/update'),
         method: 'post',
         data: this.$http.adornData({catId: catId, name: name, icon: icon, productUnit: productUnit}, false)
       }).then(({data}) => {
@@ -257,7 +257,7 @@ export default {
     addCategory () {
       console.log('提交的三级分类数据', this.category)
       this.$http({
-        url: this.$http.adornUrl('/product/category/save'),
+        url: this.$http.adornUrl('/product/category.vue/save'),
         method: 'post',
         data: this.$http.adornData(this.category, false)
       }).then(({data}) => {
@@ -280,7 +280,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$http({
-          url: this.$http.adornUrl('/product/category/delete'),
+          url: this.$http.adornUrl('/product/category.vue/delete'),
           method: 'post',
           data: this.$http.adornData(ids, false)
         }).then(({data}) => {
