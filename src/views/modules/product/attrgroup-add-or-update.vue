@@ -17,7 +17,8 @@
       <el-input v-model="dataForm.icon" placeholder="组图标"></el-input>
     </el-form-item>
     <el-form-item label="所属分类id" prop="catelogId">
-      <el-input v-model="dataForm.catelogId" placeholder="所属分类id"></el-input>
+<!--      <el-input v-model="dataForm.catelogId" placeholder="所属分类id"></el-input>-->
+      <el-cascader v-model="dataForm.catelogIds" :options="categorys" :props="props"></el-cascader>
     </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -32,6 +33,12 @@
   export default {
     data () {
       return {
+        props: {
+          value: 'catId',
+          label: 'name',
+          children: 'children'
+        },
+        categorys: [],
         visible: false,
         dataForm: {
           attrGroupId: 0,
@@ -39,7 +46,8 @@
           sort: '',
           descript: '',
           icon: '',
-          catelogId: ''
+          catelogId: '',
+          catelogIds: []
         },
         dataRule: {
           attrGroupName: [
@@ -61,6 +69,15 @@
       }
     },
     methods: {
+      getCategorys () {
+        this.$http({
+          url: this.$http.adornUrl('/product/category/list/tree'),
+          method: 'get'
+        }).then(({data}) => {
+          console.log('成功获取到菜单数据', data.data)
+          this.categorys = data.data
+        })
+      },
       init (id) {
         this.dataForm.attrGroupId = id || 0
         this.visible = true
@@ -116,6 +133,9 @@
           }
         })
       }
+    },
+    created () {
+      this.getCategorys()
     }
   }
 </script>

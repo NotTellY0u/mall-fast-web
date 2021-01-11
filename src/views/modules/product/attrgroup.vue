@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="20">
     <el-col :span="6">
-      <category @tree-node-click="treenodeclick"></category>
+      <category @tree-node-click="treeNodeClick"></category>
     </el-col>
     <el-col :span="18">
       <div class="mod-config">
@@ -108,6 +108,7 @@ export default {
   },
   data () {
     return {
+      catId: 0,
       dataForm: {
         key: ''
       },
@@ -126,15 +127,19 @@ export default {
   },
   methods: {
     // 感知树节点被点击
-    treenodeclick (data, node, component) {
+    treeNodeClick (data, node, component) {
       console.log('attrgroup感知到category的节点被点击', data, node, component)
       console.log('刚才被点击的菜单id:', data.catId)
+      if (node.level === 3) {
+        this.catId = data.catId
+        this.getDataList()
+      }
     },
     // 获取数据列表
     getDataList () {
       this.dataListLoading = true
       this.$http({
-        url: this.$http.adornUrl('/product/attrgroup/list'),
+        url: this.$http.adornUrl(`/product/attrgroup/list/${this.catId}`),
         method: 'get',
         params: this.$http.adornParams({
           'page': this.pageIndex,
