@@ -2,7 +2,8 @@
   <el-dialog
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
-    :visible.sync="visible">
+    :visible.sync="visible"
+    @closed="dialogClose">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
              label-width="80px">
       <el-form-item label="组名" prop="attrGroupName">
@@ -19,7 +20,7 @@
       </el-form-item>
       <el-form-item label="所属分类id" prop="catelogId">
         <!--      <el-input v-model="dataForm.catelogId" placeholder="所属分类id"></el-input>-->
-        <el-cascader v-model="dataForm.catelogIds" :options="categorys" :props="props"></el-cascader>
+        <el-cascader v-model="dataForm.catelogPath" filterable :options="categorys" :props="props"></el-cascader>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -48,7 +49,7 @@ export default {
         descript: '',
         icon: '',
         catelogId: '',
-        catelogIds: []
+        catelogPath: []
       },
       dataRule: {
         attrGroupName: [
@@ -70,6 +71,9 @@ export default {
     }
   },
   methods: {
+    dialogClose () {
+      this.dataForm.catelogPath = []
+    },
     getCategorys () {
       this.$http({
         url: this.$http.adornUrl('/product/category/list/tree'),
@@ -97,7 +101,7 @@ export default {
               this.dataForm.icon = data.attrGroup.icon
               this.dataForm.catelogId = data.attrGroup.catelogId
               // 查出catelogId的完整路径
-              this.dataForm.catelogIds = data.attrGroup.catelogPath
+              this.dataForm.catelogPath = data.attrGroup.catelogPath
             }
           })
         }
@@ -116,7 +120,7 @@ export default {
               'sort': this.dataForm.sort,
               'descript': this.dataForm.descript,
               'icon': this.dataForm.icon,
-              'catelogId': this.dataForm.catelogIds[this.dataForm.catelogIds.length - 1]
+              'catelogId': this.dataForm.catelogPath[this.dataForm.catelogPath.length - 1]
             })
           }).then(({data}) => {
             if (data && data.code === 0) {
